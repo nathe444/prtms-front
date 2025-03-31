@@ -1,22 +1,50 @@
 import { useState } from "react"
-import { Lock, Mail, Eye, EyeOff, Stethoscope, ShieldCheck } from "lucide-react"
+import { Lock, Mail, Eye, EyeOff, Stethoscope, ShieldCheck, Loader } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { useLoginMutation } from "@/store/apis/auth/authApi"
+import { setUser } from "@/store/apis/auth/authSlice"
+import { toast } from "sonner"
 
 export default function LoginPage() {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [login, { isLoading ,  }] = useLoginMutation()
+  const User = useSelector((state: RootState) => state.auth.user);
+
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [rememberMe, setRememberMe] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle login logic
-    console.log({ email, password, rememberMe })
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await login({ email, password }).unwrap();
+      dispatch(setUser(response));
+      console.log("user", User);
+      toast.success("Login successful");
+      navigate("/dashboard");
+    } catch (err: any) {
+      console.error("Login failed", err);
+  
+      // ✅ Check if the error object has 'data' and display it
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else if (err?.error) {
+        toast.error(err.error);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
+  };
+
 
   return (
     <div className="flex min-h-screen w-full bg-gradient-to-br from-slate-50 to-slate-100">
@@ -30,10 +58,10 @@ export default function LoginPage() {
               </div>
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-              የጤና መዝገብ | Health Records
+               Health Records
             </h1>
             <p className="text-muted-foreground">
-              ደህንነቱ የተጠበቀ የህክምና መረጃ ስርዓት | Secure Medical Portal
+              Secure Medical Portal
             </p>
           </div>
 
@@ -42,7 +70,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2 text-slate-700">
                   <Mail className="h-4 w-4 text-teal-600" />
-                  ኢሜይል | Email Address
+                  Email Address  
                 </Label>
                 <Input
                   id="email"
@@ -58,7 +86,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <Label htmlFor="password" className="flex items-center gap-2 text-slate-700">
                   <Lock className="h-4 w-4 text-teal-600" />
-                  የይለፍ ቃል | Password
+                  Password
                 </Label>
                 <div className="relative">
                   <Input
@@ -81,21 +109,13 @@ export default function LoginPage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="remember"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(!!checked)}
-                    className="border-slate-200 text-teal-600 focus:ring-teal-500"
-                  />
-                  <Label htmlFor="remember" className="text-slate-600">አስታውሰኝ | Remember me</Label>
-                </div>
+               
                 <Button 
                   variant="link" 
                   size="sm" 
                   className="px-0 text-sm text-teal-600 hover:text-teal-700"
                 >
-                  የይለፍ ቃል ረሳሁ | Forgot password?
+                  Forgot password?
                 </Button>
               </div>
             </div>
@@ -105,21 +125,23 @@ export default function LoginPage() {
               className={cn(
                 "w-full bg-teal-600 hover:bg-teal-700",
                 "transition-all duration-200 ease-in-out",
-                "shadow-lg hover:shadow-xl hover:shadow-teal-100"
+                "shadow-lg hover:shadow-xl hover:shadow-teal-100",
+                isLoading && "opacity-50 cursor-not-allowed"
               )}
+              disabled={isLoading}
             >
-              ግባ | Sign In
+              {isLoading ? <div className="flex items-center gap-2"><Loader className="h-4 w-4 animate-spin" /> Signing In..</div> : "Sign In"}
             </Button>
           </form>
 
           <div className="text-center text-sm text-slate-600">
-            መለያ የለዎትም? | Don't have an account?{" "}
+            Don't have an account?{" "}
             <Button 
               variant="link" 
               size="sm" 
               className="px-0 text-sm text-teal-600 hover:text-teal-700"
             >
-              አስተዳዳሪውን ያግኙ | Contact administrator
+              Contact administrator
             </Button>
           </div>
         </div>
@@ -132,22 +154,21 @@ export default function LoginPage() {
           <div className="text-white space-y-8 max-w-lg">
             <div className="flex items-center gap-3 mb-6">
               <ShieldCheck className="h-12 w-12" />
-              <div className="text-2xl font-semibold">የተጠበቀ የመረጃ ስርዓት | Secure System</div>
+              <div className="text-2xl font-semibold">Secure System</div>
             </div>
             <h2 className="text-4xl font-bold leading-tight">
-              የጤና መረጃዎ በደህንነት | Your Health Data, Protected
+              Your Health Data, Protected
             </h2>
             <div className="space-y-6">
               <p className="text-lg text-teal-50 leading-relaxed">
-                በዘመናዊ የመረጃ ጥበቃ ስርዓት የታገዘ፣ ለኢትዮጵያ ሆስፒታሎችና ክሊኒኮች የተዘጋጀ።
                 Modern secure platform designed for Ethiopian hospitals and clinics.
               </p>
               <ul className="space-y-3">
                 {[
-                  "የተሟላ የመረጃ ጥበቃ | Complete data protection",
-                  "ባለሙያዎች ብቻ የሚደርሱበት | Authorized access only",
-                  "24/7 የቴክኒክ ድጋፍ | 24/7 technical support",
-                  "የተቀናጀ የመረጃ አያያዝ | Integrated record keeping"
+                  "Complete data protection",
+                  "Authorized access only",
+                  "24/7 technical support",
+                  "Integrated record keeping"
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center gap-2 text-teal-50">
                     <div className="h-2 w-2 rounded-full bg-teal-400" />

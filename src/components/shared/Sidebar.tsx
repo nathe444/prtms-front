@@ -42,14 +42,14 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className={`bg-white shadow-lg transition-all duration-300 ease-in-out transform lg:translate-x-0 fixed lg:relative z-50`}
+      className={`bg-white border-black/10 shadow-xl transition-all duration-300 ease-in-out transform lg:translate-x-0 fixed lg:relative z-50`}
     >
-      <div className="flex items-center space-x-2 p-4 border-b bg-teal-50 mb-5">
-        <img
+      <div className="flex items-center space-x-2 p-4 border-b border-black/10 bg-teal-50 mb-5 h-20">
+        {/* <img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Flag_of_Ethiopia.svg/1200px-Flag_of_Ethiopia.svg.png"
           alt="Ethiopian Health"
           className="h-10 w-10 rounded-full animate-pulse"
-        />
+        /> */}
         <h2 className="text-xl  font-bold text-teal-800">ሀኪሞች ሲስተም</h2>
       </div>
 
@@ -70,7 +70,7 @@ export function AppSidebar() {
                       }}
                     >
                       <item.icon className="mr-2 text-slate-500 group-hover:text-teal-600 transition-colors" />
-                      <span className="group-hover:text-teal-800 transition-colors ">
+                      <span className="group-hover:text-teal-800 transition-colors font-semibold">
                         {item.title}
                       </span>
                     </Link>

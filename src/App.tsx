@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/auth/Login";
 import Layout from "./Layout";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 export default function App() {
   return (
@@ -11,11 +10,11 @@ export default function App() {
       <div className="flex flex-col  items-center h-screen w-full">
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />
-            <Route path='/login' element={<LoginPage/>}/>
+            <Route path="/dashboard" element={<Dashboard/>}/>
           </Route>
+          <Route path='/login' element={<LoginPage/>}/>
+
         </Routes>
       </div>
     </Router>
