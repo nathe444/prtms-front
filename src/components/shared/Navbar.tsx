@@ -3,17 +3,30 @@ import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store/store"
+import { useLogoutMutation } from "@/store/apis/auth/authApi";
+import { clearUser} from "@/store/apis/auth/authSlice";
+import { toast } from "sonner";
 
 export default function Navbar() {
   const location = useLocation();
   const User = useSelector((state:RootState) => state.auth.user);
+  const dispatch = useDispatch();
 
-  
+  const [logout  ] = useLogoutMutation();
 
-  const handleLogout = ()=>{
-    
+
+
+  const handleLogout = async ()=>{
+    try {
+      await logout().unwrap();
+      dispatch(clearUser());
+      toast.success("Logout successful");
+    } catch (error) {
+      console.error("Logout failed", error);
+      toast.error("Logout failed");
+    }
   }
 
   return (
@@ -53,6 +66,7 @@ export default function Navbar() {
           variant="destructive"
           size="icon"
           className="text-teal-600 cursor-pointer"
+          onClick={handleLogout}
         >
           <LogOut size={20} />
           <span className="hidden text-2xl">Logout</span>
