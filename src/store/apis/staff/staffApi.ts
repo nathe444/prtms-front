@@ -40,14 +40,14 @@ export const staffApi = createApi({
   endpoints: (builder) => ({
     // Fetch all staff members
     getStaffs: builder.query<Staff[], void>({
-      query: () => "/staff",
+      query: () => "/staff/all",
       providesTags: ["Staff"],
     }),
 
     // Create a new staff member
     createStaff: builder.mutation<Staff, Partial<Staff>>({
       query: (staffData) => ({
-        url: "/staff",
+        url: "/staff/create",
         method: "POST",
         body: staffData,
       }),

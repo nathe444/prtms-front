@@ -15,7 +15,7 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [login, { isLoading ,  }] = useLoginMutation()
+  const [login, { isLoading   }] = useLoginMutation()
 
 
   const [email, setEmail] = useState("")
@@ -31,8 +31,6 @@ export default function LoginPage() {
       navigate("/dashboard");
     } catch (err: any) {
       console.error("Login failed", err);
-  
-      // ✅ Check if the error object has 'data' and display it
       if (err?.data?.message) {
         toast.error(err.data.message);
       } else if (err?.error) {

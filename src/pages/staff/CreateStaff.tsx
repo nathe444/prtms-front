@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { z } from "zod";
 import {
   User,
   MapPin,
@@ -9,10 +10,46 @@ import {
   FileText,
   Camera,
   CheckCircle2,
+  Loader,
 } from "lucide-react";
+import { useCreateStaffMutation } from "@/store/apis/staff/staffApi";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+const staffSchema = z.object({
+  role: z.enum(["doctor", "nurse", "pharmacist", "receptionist", "laboratory_technologist", "cashier", "super_admin"]),
+  firstName: z.string().min(2, { message: "First name must be at least 2 characters" }),
+  fatherName: z.string().min(2, { message: "Father name must be at least 2 characters" }),
+  grandFatherName: z.string().min(2, { message: "Grandfather name must be at least 2 characters" }),
+  sex: z.enum(["male", "female"]),
+  email: z.string().email({ message: "Invalid email address" }),
+  dateOfBirth: z.string().refine(
+    (date) => {
+      const parsedDate = new Date(date);
+      const minAge = new Date();
+      minAge.setFullYear(minAge.getFullYear() - 18);
+      return parsedDate <= minAge;
+    },
+    { message: "You must be at least 18 years old" }
+  ),
+  phoneNumber: z.string().regex(/^\+?[0-9]{10,14}$/, { message: "Invalid phone number" }),
+  address: z.string().min(5, { message: "Address must be at least 5 characters" }),
+  emergencyContactName: z.string().min(2, { message: "Emergency contact name must be at least 2 characters" }),
+  emergencyContactPhoneNumber: z.string().regex(/^\+?[0-9]{10,14}$/, { message: "Invalid emergency contact phone number" }),
+
+  houseNumber: z.string().optional(),
+  specialization: z.string().optional(),
+  isTriage: z.boolean().optional(),
+  bloodGroup: z.enum(["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-", "Rh+", "Rh-"]).optional(),
+  isActive: z.boolean().optional(),
+  qualifications: z.string().optional(),
+  previousExperience: z.string().optional(),
+  profilePicture: z.string().optional(),
+});
 
 interface StaffFormData {
-  // Required Fields
   role: string;
   firstName: string;
   fatherName: string;
@@ -25,7 +62,6 @@ interface StaffFormData {
   emergencyContactName: string;
   emergencyContactPhoneNumber: string;
 
-  // Optional Fields
   houseNumber?: string;
   specialization?: string;
   isTriage?: boolean;
@@ -37,9 +73,7 @@ interface StaffFormData {
 }
 
 const CreateStaff: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"required" | "optional">(
-    "required"
-  );
+  const [activeTab, setActiveTab] = useState<"required" | "optional">("required");
   const [formData, setFormData] = useState<StaffFormData>({
     role: "Doctor",
     firstName: "",
@@ -53,7 +87,6 @@ const CreateStaff: React.FC = () => {
     emergencyContactName: "",
     emergencyContactPhoneNumber: "",
 
-    // Optional Fields
     houseNumber: "",
     specialization: "",
     isTriage: false,
@@ -64,14 +97,27 @@ const CreateStaff: React.FC = () => {
     profilePicture: "",
   });
 
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
+
+  const [createStaff, { isLoading }] = useCreateStaffMutation();
+  const navigate = useNavigate();
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
+    // Clear validation error for this field when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,13 +141,48 @@ const CreateStaff: React.FC = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    // TODO: Implement staff creation logic
-    console.log(formData);
+  const handleSubmit = async(e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const cleanedData = Object.fromEntries(
+        Object.entries(formData).filter(([_, value]) => {
+          if (typeof value === 'string') {
+            return value.trim() !== '';
+          }
+          return value !== null && value !== undefined;
+        })
+      );
+
+      const parsedData = staffSchema.parse(cleanedData);
+      
+      await createStaff(parsedData).unwrap();
+      toast.success("Staff created successfully");
+      navigate("/staffs");
+    } catch (err: any) {
+      console.error("staff creation failed", err);
+      
+      if (err instanceof z.ZodError) {
+        const errorMap: {[key: string]: string} = {};
+        err.errors.forEach((issue) => {
+          const path = issue.path.join('.');
+          errorMap[path] = issue.message;
+        });
+        setValidationErrors(errorMap);
+      } else if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else if (err?.error) {
+        toast.error(err.error);
+      } else {
+        toast.error("An unexpected error occurred during staff creation");
+      }
+    }
   };
 
   const renderField = (field: any) => {
     const { name, label, type, icon: Icon, options } = field;
+
+    // Determine if this field has a validation error
+    const errorMessage = validationErrors[name];
 
     switch (type) {
       case "select":
@@ -113,9 +194,12 @@ const CreateStaff: React.FC = () => {
             </label>
             <select
               name={name}
-              value={formData[name as keyof StaffFormData] || ""}
+              value={formData[name as keyof StaffFormData] as string || ""}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-teal-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className={cn(
+                "w-full px-3 py-2 border border-teal-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500",
+                errorMessage && "border-red-500 focus:ring-red-500"
+              )}
             >
               <option value="">{`Select ${label}`}</option>
               {options.map((option: string) => (
@@ -124,6 +208,9 @@ const CreateStaff: React.FC = () => {
                 </option>
               ))}
             </select>
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+            )}
           </div>
         );
 
@@ -141,6 +228,9 @@ const CreateStaff: React.FC = () => {
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
             </label>
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+            )}
           </div>
         );
 
@@ -156,7 +246,10 @@ const CreateStaff: React.FC = () => {
               name={name}
               accept="image/*"
               onChange={handleFileUpload}
-              className="w-full px-3 py-2 border border-teal-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 file:mr-4 file:rounded-md file:border-0 file:bg-teal-50 file:px-4 file:py-2 file:text-teal-700 hover:file:bg-teal-100"
+              className={cn(
+                "w-full px-3 py-2 border border-teal-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500",
+                errorMessage && "border-red-500 focus:ring-red-500"
+              )}
             />
             {formData.profilePicture && (
               <img
@@ -164,6 +257,9 @@ const CreateStaff: React.FC = () => {
                 alt="Profile"
                 className="mt-2 w-32 h-32 object-cover rounded-md border-2 border-teal-300"
               />
+            )}
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
             )}
           </div>
         );
@@ -178,11 +274,17 @@ const CreateStaff: React.FC = () => {
             <input
               type={type}
               name={name}
-              value={formData[name as keyof StaffFormData] || ""}
+              value={formData[name as keyof StaffFormData] as string || ""}
               onChange={handleInputChange}
               placeholder={`Enter ${label}`}
-              className="w-full px-3 py-2 border border-teal-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className={cn(
+                "w-full px-3 py-2 border border-teal-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500",
+                errorMessage && "border-red-500 focus:ring-red-500"
+              )}
             />
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+            )}
           </div>
         );
     }
@@ -194,7 +296,7 @@ const CreateStaff: React.FC = () => {
       label: "Role",
       type: "select",
       icon: User,
-      options: ["Doctor", "Nurse", "Admin"],
+      options: ["doctor", "nurse", "pharmacist", "receptionist", "laboratory_technologist", "cashier", "super_admin"],
     },
     { name: "firstName", label: "First Name", type: "text", icon: User },
     { name: "fatherName", label: "Father Name", type: "text", icon: User },
@@ -209,7 +311,7 @@ const CreateStaff: React.FC = () => {
       label: "Sex",
       type: "select",
       icon: User,
-      options: ["Male", "Female", "Other"],
+      options: ["male", "female"],
     },
     { name: "email", label: "Email", type: "email", icon: Mail },
     {
@@ -253,7 +355,7 @@ const CreateStaff: React.FC = () => {
       label: "Blood Group",
       type: "select",
       icon: FileText,
-      options: ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],
+      options: ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-", "Rh+", "Rh-"],
     },
     {
       name: "isActive",
@@ -382,13 +484,19 @@ const CreateStaff: React.FC = () => {
         )}
 
         <div className="flex justify-end mt-8 space-x-4">
-          <button
+          <Button 
             onClick={handleSubmit}
-            className="flex items-center space-x-2 px-6 py-3 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors"
+            className={cn(
+              "w-full bg-teal-600 hover:bg-teal-700",
+              "transition-all duration-200 ease-in-out",
+              "shadow-lg hover:shadow-xl hover:shadow-teal-100",
+              "cursor-pointer",
+              isLoading && "opacity-50 cursor-not-allowed"
+            )}
+            disabled={isLoading}
           >
-            <CheckCircle2 className="h-5 w-5" />
-            <span>Create Staff</span>
-          </button>
+            {isLoading ? <div className="flex items-center hover gap-2"><Loader className="h-4 w-4 animate-spin" /> <span className="text-white">Creating Staff..</span></div> : <span className="text-white/90">Create Staff</span>}
+          </Button>
         </div>
       </div>
     </div>
