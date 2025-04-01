@@ -32,7 +32,7 @@ export default function Navbar() {
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4 h-10 flex justify-between items-center">
       <div className="flex items-center gap-2">
-        <SidebarTrigger className="lg:hidden">
+        <SidebarTrigger className="lg:hidden cursor-pointer">
           <button className="bg-white shadow-md rounded-full animate-bounce hover:animate-none transition-all duration-300">
             <Menu size={22} className="text-teal-600" />
           </button>

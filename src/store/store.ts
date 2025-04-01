@@ -13,3 +13,6 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+// "email": "realdavis7779@gmail.com",
+//     "password":"b9b8c3fa741f"

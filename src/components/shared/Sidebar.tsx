@@ -6,6 +6,7 @@ import {
   BarChart2,
   Shield,
   HelpCircle,
+  X,
 } from "lucide-react";
 
 import {
@@ -44,13 +45,17 @@ export function AppSidebar() {
     <Sidebar
       className={`bg-white border-black/10 shadow-xl transition-all duration-300 ease-in-out transform lg:translate-x-0 fixed lg:relative z-50`}
     >
-      <div className="flex items-center space-x-2 p-4 border-b border-black/10 bg-teal-50 mb-5 h-20">
-        {/* <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Flag_of_Ethiopia.svg/1200px-Flag_of_Ethiopia.svg.png"
-          alt="Ethiopian Health"
-          className="h-10 w-10 rounded-full animate-pulse"
-        /> */}
-        <h2 className="text-xl  font-bold text-teal-800">ሀኪሞች ሲስተም</h2>
+      <div className="flex items-center justify-between space-x-2 p-4 border-b border-black/10 bg-teal-50 mb-5 h-20">
+        <h2 className="text-xl font-bold text-teal-800">ሀኪሞች ሲስተም</h2>
+        {isMobile && (
+          <button 
+            onClick={() => setOpenMobile(false)}
+            className="text-teal-800 hover:bg-teal-100 rounded-full p-1 transition-colors"
+            aria-label="Close sidebar"
+          >
+            <X size={24} cursor="pointer"/>
+          </button>
+        )}
       </div>
 
       <SidebarContent>

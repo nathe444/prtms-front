@@ -4,6 +4,7 @@ import LoginPage from "./pages/auth/Login";
 import Layout from "./Layout";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import RequireAuth from "./components/CheckAuth";
+import CreateStaff from "./pages/staff/CreateStaff";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="*" element={<NotFound />} />
             <Route path="/dashboard" element={<Dashboard/>}/>
+            <Route path="/create-staff" element={<CreateStaff/>}/>
           </Route>
           </Route>
           <Route path='/login' element={<LoginPage/>}/>
