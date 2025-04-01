@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { useLoginMutation } from "@/store/apis/auth/authApi"
 import { setUser } from "@/store/apis/auth/authSlice"
@@ -16,7 +16,6 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const [login, { isLoading ,  }] = useLoginMutation()
-  const User = useSelector((state: RootState) => state.auth.user);
 
 
   const [email, setEmail] = useState("")
@@ -28,7 +27,6 @@ export default function LoginPage() {
     try {
       const response = await login({ email, password }).unwrap();
       dispatch(setUser(response));
-      console.log("user", User);
       toast.success("Login successful");
       navigate("/dashboard");
     } catch (err: any) {
@@ -126,11 +124,12 @@ export default function LoginPage() {
                 "w-full bg-teal-600 hover:bg-teal-700",
                 "transition-all duration-200 ease-in-out",
                 "shadow-lg hover:shadow-xl hover:shadow-teal-100",
+                "cursor-pointer",
                 isLoading && "opacity-50 cursor-not-allowed"
               )}
               disabled={isLoading}
             >
-              {isLoading ? <div className="flex items-center gap-2"><Loader className="h-4 w-4 animate-spin" /> Signing In..</div> : "Sign In"}
+              {isLoading ? <div className="flex items-center hover gap-2"><Loader className="h-4 w-4 animate-spin" /> Signing In..</div> : "Sign In"}
             </Button>
           </form>
 
