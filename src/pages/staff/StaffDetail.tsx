@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -28,6 +28,7 @@ import {
   useResendPasswordMutation,
 } from "@/store/apis/staff/staffApi";
 import { toast } from "sonner";
+import { StaffActionDialogs } from "./staffActionDialogs";
 
 const StaffDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -40,10 +41,15 @@ const StaffDetail: React.FC = () => {
   const [deactivateAccount, { isLoading: deactivatingAccount }] =
     useDeactivateAccountMutation();
 
+  const [openResendDialog, setOpenResendDialog] = useState(false);
+  const [openActivateDialog, setOpenActivateDialog] = useState(false);
+  const [openDeactivateDialog, setOpenDeactivateDialog] = useState(false);
+
   const handleResendPassword = async () => {
     try {
       await resendPassword(id!).unwrap();
       toast.success("Password reset email sent successfully");
+      setOpenResendDialog(false);
     } catch (err: any) {
       if (err?.data?.message) {
         toast.error(err.data.message);
@@ -59,6 +65,7 @@ const StaffDetail: React.FC = () => {
     try {
       await activateAccount(id!).unwrap();
       toast.success("Account Activated");
+      setOpenActivateDialog(false);
     } catch (err: any) {
       if (err?.data?.message) {
         toast.error(err.data.message);
@@ -74,8 +81,9 @@ const StaffDetail: React.FC = () => {
 
   const handleDeactivateAccoount = async () => {
     try {
-      await deactivateAccount(id!);
+      await deactivateAccount(id!).unwrap();
       toast.success("Account deactivated");
+      setOpenDeactivateDialog(false);
     } catch (err: any) {
       if (err?.data?.message) {
         toast.error(err.data.message);
@@ -151,7 +159,7 @@ const StaffDetail: React.FC = () => {
         <div className="flex gap-2 items-center">
           <Button
             className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
-            onClick={handleResendPassword}
+            onClick={() => setOpenResendDialog(true)}
           >
             <span className="text-white/90">
               {" "}
@@ -169,7 +177,7 @@ const StaffDetail: React.FC = () => {
           {staff.isActive ? (
             <Button
               className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
-              onClick={handleDeactivateAccoount}
+              onClick={() => setOpenDeactivateDialog(true)}
             >
               <span className="text-white/90">
                 {" "}
@@ -186,7 +194,7 @@ const StaffDetail: React.FC = () => {
           ) : (
             <Button
               className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
-              onClick={handleActivateAccoount}
+              onClick={() => setOpenActivateDialog(true)}
             >
               <span className="text-white/90">
                 {" "}
@@ -530,6 +538,18 @@ const StaffDetail: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+      <StaffActionDialogs
+        staffId={id!}
+        openResend={openResendDialog}
+        openActivate={openActivateDialog}
+        openDeactivate={openDeactivateDialog}
+        onResendClose={() => setOpenResendDialog(false)}
+        onActivateClose={() => setOpenActivateDialog(false)}
+        onDeactivateClose={() => setOpenDeactivateDialog(false)}
+        onResendPassword={handleResendPassword}
+        onActivateAccount={handleActivateAccoount}
+        onDeactivateAccount={handleDeactivateAccoount}
+      />
     </div>
   );
 };
