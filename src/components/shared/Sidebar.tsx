@@ -23,7 +23,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 // Menu items with Ethiopian context
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Profile", url: "/profile", icon: User },
+  { title: "Staffs", url: "/staffs", icon: User },
   { title: "Medical Records", url: "/records", icon: FileText },
   { title: "Analytics", url: "/analytics", icon: BarChart2 },
   { title: "Security", url: "/security", icon: Shield },
@@ -39,7 +39,7 @@ export function AppSidebar() {
     isMobile,
     setOpenMobile,
     // toggleSidebar,
-  } = useSidebar()
+  } = useSidebar();
 
   return (
     <Sidebar
@@ -48,12 +48,12 @@ export function AppSidebar() {
       <div className="flex items-center justify-between space-x-2 p-4 border-b border-black/10 bg-teal-50 mb-5 h-20">
         <h2 className="text-xl font-bold text-teal-800">ሀኪሞች ሲስተም</h2>
         {isMobile && (
-          <button 
+          <button
             onClick={() => setOpenMobile(false)}
             className="text-teal-800 hover:bg-teal-100 rounded-full p-1 transition-colors"
             aria-label="Close sidebar"
           >
-            <X size={24} cursor="pointer"/>
+            <X size={24} cursor="pointer" />
           </button>
         )}
       </div>
@@ -70,7 +70,7 @@ export function AppSidebar() {
                       className="flex items-center group py-6"
                       onClick={() => {
                         if (isMobile) {
-                          setOpenMobile(false)
+                          setOpenMobile(false);
                         }
                       }}
                     >

@@ -2,6 +2,33 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../../store";
 
 interface Staff {
+  id: string;
+  registrationDate: string; 
+  role: string;
+  firstName: string;
+  fatherName: string;
+  grandFatherName: string;
+  sex: string;
+  dateOfBirth: string; 
+  address: string;
+  houseNumber: string;
+  phoneNumber: string;
+  emergencyContactName: string;
+  emergencyContactPhoneNumber: string;
+  specialization: string;
+  isTriage: boolean;
+  email: string;
+  isActive: boolean;
+  workSchedule: string;
+  profilePicture: string;
+  qualifications: string;
+  previousExperience: string;
+  bloodGroup: string;
+  isFirstLogin: boolean;
+}
+
+
+interface CreateStaff {
   role: string;
   firstName: string;
   fatherName: string;
@@ -38,25 +65,23 @@ export const staffApi = createApi({
   }),
   tagTypes: ["Staff"], // 🔥 Tracks staff updates
   endpoints: (builder) => ({
-    // Fetch all staff members
     getStaffs: builder.query<Staff[], void>({
       query: () => "/staff/all",
       providesTags: ["Staff"],
     }),
-
-    // Create a new staff member
-    createStaff: builder.mutation<Staff, Partial<Staff>>({
+    getStaffById: builder.query<Staff, string>({
+      query: (id) => `/staff/${id}/single`,
+      providesTags: (result, error, id) => [{ type: "Staff", id }],
+    }),
+    createStaff: builder.mutation<CreateStaff, Partial<CreateStaff>>({
       query: (staffData) => ({
         url: "/staff/create",
         method: "POST",
         body: staffData,
       }),
-
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
-          await queryFulfilled; // Wait for API success
-
-          // Force a refetch of staff data
+          await queryFulfilled; 
           dispatch(staffApi.util.invalidateTags(["Staff"]));
         } catch (error) {
           console.error("Failed to create staff:", error);
@@ -66,4 +91,4 @@ export const staffApi = createApi({
   }),
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery } = staffApi;
