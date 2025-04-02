@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../../store";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../../../services/baseQuery";
 
 interface Staff {
   id: string;
@@ -53,17 +53,8 @@ interface CreateStaff {
 
 export const staffApi = createApi({
   reducerPath: "staffApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
-    prepareHeaders: (headers, { getState }) => {
-      const token =
-        (getState() as RootState).auth.accessToken ||
-        localStorage.getItem("token");
-      if (token) headers.set("Authorization", `Bearer ${token}`);
-      return headers;
-    },
-  }),
-  tagTypes: ["Staff"], // 🔥 Tracks staff updates
+  baseQuery: baseQueryWithReauth, // Use the reauth base query here
+  tagTypes: ["Staff"],
   endpoints: (builder) => ({
     getStaffs: builder.query<Staff[], void>({
       query: () => "/staff/all",
