@@ -51,6 +51,28 @@ interface CreateStaff {
   profilePicture?: string;
 }
 
+interface UpdateStaff {
+  role: string;
+  firstName: string;
+  fatherName: string;
+  grandFatherName: string;
+  sex: string;
+  dateOfBirth: string;
+  phoneNumber: string;
+  address: string;
+  emergencyContactName: string;
+  emergencyContactPhoneNumber: string;
+
+  houseNumber?: string;
+  specialization?: string;
+  isTriage?: boolean;
+  bloodGroup?: string;
+  isActive?: boolean;
+  qualifications?: string;
+  previousExperience?: string;
+  profilePicture?: string;
+}
+
 export const staffApi = createApi({
   reducerPath: "staffApi",
   baseQuery: baseQueryWithReauth, // Use the reauth base query here
@@ -62,7 +84,7 @@ export const staffApi = createApi({
     }),
     getStaffById: builder.query<Staff, string>({
       query: (id) => `/staff/${id}/single`,
-      providesTags: (result, error, id) => [{ type: "Staff", id }],
+      providesTags: (_, __, id) => [{ type: "Staff", id }],
     }),
     createStaff: builder.mutation<CreateStaff, Partial<CreateStaff>>({
       query: (staffData) => ({
@@ -79,19 +101,38 @@ export const staffApi = createApi({
         }
       },
     }),
+    updateStaff: builder.mutation<Staff, { id: string; staffData: Partial<UpdateStaff> }>({
+      query: ({ id, staffData }) => ({
+        url: `/staff/${id}/update`,
+        method: "PATCH",
+        body: staffData,
+      }),
+      invalidatesTags: (_, __, { id }) => [
+        { type: 'Staff', id },
+        { type: 'Staff' } // Also invalidate the list
+      ],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(staffApi.util.invalidateTags(['Staff']));
+        } catch (error) {
+          console.error('Update staff failed:', error);
+        }
+      }
+    }),
     resendPassword: builder.mutation<void , string>({
       query: (id) => (`/staff/${id}/resendPassword`)
     }),
     activateAccount: builder.mutation<void, string>({
       query: (id) => `/staff/${id}/activate`,
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (_, __, id) => [
         { type: 'Staff', id },
         { type: 'Staff' } // Also invalidate the list
       ]
     }),
     deactivateAccount: builder.mutation<void, string>({
       query: (id) => `/staff/${id}/deactivate`,
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (_, __, id) => [
         { type: 'Staff', id },
         { type: 'Staff' } // Also invalidate the list
       ]
@@ -99,4 +140,4 @@ export const staffApi = createApi({
   }),
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation } = staffApi;

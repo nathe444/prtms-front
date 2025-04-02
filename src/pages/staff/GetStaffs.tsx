@@ -6,7 +6,6 @@ import {
   PlusCircle,
   Search,
   UserCog,
-  Mail,
   Phone,
   MapPin,
 } from "lucide-react";
@@ -152,7 +151,7 @@ const GetStaffs: React.FC = () => {
                   {filteredStaffs.map((staff) => (
                     <TableRow
                       key={staff.email}
-                      className="hover:bg-slate-50/80 border-b  border-teal-200 last:border-0 transition-colors duration-150 cursor-pointer"
+                      className="hover:bg-teal-100 border-b  border-teal-200 last:border-0 transition-colors duration-150 cursor-pointer"
                       onClick={() => navigate(`/staff/${staff.id}`)}
                     >
                       <TableCell>

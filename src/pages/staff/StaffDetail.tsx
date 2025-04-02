@@ -28,7 +28,7 @@ import {
   useResendPasswordMutation,
 } from "@/store/apis/staff/staffApi";
 import { toast } from "sonner";
-import { StaffActionDialogs } from "./staffActionDialogs";
+import { StaffActionDialogs } from "../../components/staffActionDialogs";
 
 const StaffDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -101,8 +101,8 @@ const StaffDetail: React.FC = () => {
     navigate("/staffs");
   };
 
-  const handleEdit = () => {
-    navigate(`/staff/edit/${id}`);
+  const handleUpdate = () => {
+    navigate(`/staff/${id}/update`);
   };
 
   if (isLoading) {
@@ -211,11 +211,11 @@ const StaffDetail: React.FC = () => {
           )}
 
           <Button
-            onClick={handleEdit}
+            onClick={handleUpdate}
             className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
           >
             <Edit className="mr-2 h-4 w-4 text-white/90" />{" "}
-            <span className="text-white/90">Edit Profile</span>
+            <span className="text-white/90">Update Profile</span>
           </Button>
         </div>
       </div>
@@ -306,19 +306,19 @@ const StaffDetail: React.FC = () => {
               <TabsList className="w-full bg-slate-50 px-5 gap-4  rounded-t-lg">
                 <TabsTrigger
                   value="professional"
-                  className="cursor-pointer flex-1 py-3 text-teal-600 data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-none font-medium"
+                  className="cursor-pointer flex-1 py-3 shadow-md rounded-md text-teal-600 data-[state=active]:bg-teal-600 data-[state=active]:text-white  font-medium"
                 >
                   Professional Info
                 </TabsTrigger>
                 <TabsTrigger
                   value="personal"
-                  className="cursor-pointer flex-1 py-3 text-teal-600 data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-none font-medium"
+                  className="cursor-pointer flex-1 py-3 shadow-md rounded-md text-teal-600 data-[state=active]:bg-teal-600 data-[state=active]:text-white font-medium"
                 >
                   Personal Info
                 </TabsTrigger>
                 <TabsTrigger
                   value="emergency"
-                  className="cursor-pointer flex-1 py-3 text-teal-600 data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-none font-medium"
+                  className="cursor-pointer flex-1 py-3 shadow-md rounded-md text-teal-600 data-[state=active]:bg-teal-600 data-[state=active]:text-white font-medium"
                 >
                   Emergency Contact
                 </TabsTrigger>

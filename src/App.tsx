@@ -7,6 +7,7 @@ import RequireAuth from "./components/CheckAuth";
 import CreateStaff from "./pages/staff/CreateStaff";
 import GetStaffs from "./pages/staff/GetStaffs";
 import StaffDetail from "./pages/staff/StaffDetail";
+import UpdateStaff from "./pages/staff/UpdateStaff";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
               <Route path="/staff/create" element={<CreateStaff />} />
               <Route path="/staffs" element={<GetStaffs />} />
               <Route path="/staff/:id" element={<StaffDetail />} />
+              <Route path="/staff/:id/update" element={<UpdateStaff />} />
             </Route>
           </Route>
           <Route path="/login" element={<LoginPage />} />
