@@ -88,7 +88,10 @@ export const staffApi = createApi({
         }
       },
     }),
+    resendPassword: builder.mutation<void , string>({
+      query: (id) => (`/staff/${id}/resendPassword`)
+    })
   }),
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation } = staffApi;

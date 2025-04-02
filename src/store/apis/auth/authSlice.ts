@@ -13,6 +13,8 @@ const initialState: AuthState = {
   refreshToken: localStorage.getItem("refreshToken") || null,
 };
 
+
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -29,9 +31,9 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = null;
       state.refreshToken = null;
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
     },
   },
 });

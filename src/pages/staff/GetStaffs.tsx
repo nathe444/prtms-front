@@ -49,7 +49,8 @@ const GetStaffs: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2 className="mr-2 h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="mr-2 h-8 w-8 animate-spin text-teal-600" />{" "}
+        <span className="font-bold text-teal-600">Loading staffs...</span>
       </div>
     );
   }
@@ -126,7 +127,7 @@ const GetStaffs: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="rounded-xl overflow-hidden bg-white shadow-md">
+            <div className=" rounded-xl overflow-hidden bg-white shadow-md">
               <Table>
                 <TableHeader className="bg-teal-600/95">
                   <TableRow className="border-0">
@@ -151,7 +152,7 @@ const GetStaffs: React.FC = () => {
                   {filteredStaffs.map((staff) => (
                     <TableRow
                       key={staff.email}
-                      className="hover:bg-slate-50/80 border-b border-slate-100 last:border-0 transition-colors duration-150 cursor-pointer"
+                      className="hover:bg-slate-50/80 border-b  border-teal-200 last:border-0 transition-colors duration-150 cursor-pointer"
                       onClick={() => navigate(`/staff/${staff.id}`)}
                     >
                       <TableCell>
@@ -178,15 +179,9 @@ const GetStaffs: React.FC = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="space-y-1.5">
-                          <div className="flex items-center text-sm text-slate-600">
-                            <Mail className="h-3.5 w-3.5 mr-2 text-teal-500" />
-                            {staff.email}
-                          </div>
-                          <div className="flex items-center text-sm text-slate-600">
-                            <Phone className="h-3.5 w-3.5 mr-2 text-teal-500" />
-                            {staff.phoneNumber}
-                          </div>
+                        <div className="flex items-center text-sm text-slate-600">
+                          <Phone className="h-3.5 w-3.5 mr-2 text-teal-500" />
+                          {staff.phoneNumber}
                         </div>
                       </TableCell>
                       <TableCell className="text-sm text-slate-600">

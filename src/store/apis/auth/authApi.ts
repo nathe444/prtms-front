@@ -1,11 +1,12 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../../store";
-import { setUser, clearUser } from "./authSlice";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../../../services/baseQuery";
 
-export interface LoginResponse {
-  access_token: string;
-  refreshToken:string;
-  staff:{
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface Staff{
     role: string;
     firstName: string;
     fatherName: string;
@@ -26,23 +27,17 @@ export interface LoginResponse {
     previousExperience: string;
     profilePicture: string
   }
-}
 
-export interface LoginRequest {
-  email: string;
-  password: string;
+
+export interface LoginResponse {
+  staff: Staff;
+  access_token: string;
+  refreshToken: string;
 }
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.accessToken || localStorage.getItem("token");
-      if (token) headers.set("Authorization", `Bearer ${token}`);
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
@@ -50,28 +45,21 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          // localStorage.setItem("token", data.access_token);
-          // localStorage.setItem("refreshToken", data.refreshToken);
-          dispatch(setUser(data));
-        } catch (error) {
-          console.error("Login failed", error);
-        }
-      },
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: "/logout",
+        url: "/auth/logout",
         method: "POST",
       }),
-      async onQueryStarted(_, { dispatch }) {
-        localStorage.removeItem("token");
-        dispatch(clearUser());
-      },
+    }),
+    refreshToken: builder.mutation<LoginResponse, string>({
+      query: (refreshToken) => ({
+        url: "/auth/refresh",
+        method: "POST",
+        body: { refreshToken },
+      }),
     }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation } = authApi;
+export const { useLoginMutation, useLogoutMutation, useRefreshTokenMutation } = authApi;

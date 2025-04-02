@@ -13,6 +13,7 @@ import {
   Edit,
   UserCog,
   Loader2,
+  Loader,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,12 +21,33 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { useGetStaffByIdQuery } from "@/store/apis/staff/staffApi";
+import {
+  useGetStaffByIdQuery,
+  useResendPasswordMutation,
+} from "@/store/apis/staff/staffApi";
+import { toast } from "sonner";
 
 const StaffDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { data: staff, error, isLoading } = useGetStaffByIdQuery(id || "");
+  const [resendPassword, { isLoading: isSending }] =
+    useResendPasswordMutation();
+
+  const handleResendPassword = async () => {
+    try {
+      await resendPassword(id!).unwrap();
+      toast.success("Password reset email sent successfully");
+    } catch (err: any) {
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else if (err?.error) {
+        toast.error(err.error);
+      } else {
+        toast.error("An unexpected error occurred during staff creation");
+      }
+    }
+  };
 
   const handleBack = () => {
     navigate("/staffs");
@@ -35,19 +57,17 @@ const StaffDetail: React.FC = () => {
     navigate(`/staff/edit/${id}`);
   };
 
-  // Show loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 text-teal-600 animate-spin" />
-        <span className="ml-2 text-lg text-slate-700">
-          Loading staff details...
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="mr-2 h-8 w-8 animate-spin text-teal-600" />{" "}
+        <span className="font-bold text-teal-600">
+          Loading staff Details...
         </span>
       </div>
     );
   }
 
-  // Show error state
   if (error || !staff) {
     return (
       <div className="container mx-auto px-4 py-6">
@@ -88,19 +108,38 @@ const StaffDetail: React.FC = () => {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-teal-700">Staff Details</h1>
 
-        <Button
-          onClick={handleEdit}
-          className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
-        >
-          <Edit className="mr-2 h-4 w-4 text-white/90" />{" "}
-          <span className="text-white/90">Edit Profile</span>
-        </Button>
+        <div className="flex gap-2 items-center">
+          <Button
+            className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
+            onClick={handleResendPassword}
+          >
+            <span className="text-white/90">
+              {" "}
+              {isSending ? (
+                <div className="flex items-center hover gap-2">
+                  <Loader className="h-4 w-4 animate-spin" />{" "}
+                  <span className="text-white">sending password reset..</span>
+                </div>
+              ) : (
+                <span className="text-white/90">send Password reset</span>
+              )}
+            </span>
+          </Button>
+
+          <Button
+            onClick={handleEdit}
+            className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
+          >
+            <Edit className="mr-2 h-4 w-4 text-white/90" />{" "}
+            <span className="text-white/90">Edit Profile</span>
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column - Profile summary */}
         <Card className="shadow-sm border-0 lg:col-span-1">
-          <CardContent className="p-6">
+          <CardContent className="px-6">
             <div className="flex flex-col items-center text-center mb-6">
               <Avatar className="h-24 w-24 bg-teal-100 text-teal-700 mb-4">
                 <AvatarFallback className="text-xl">
@@ -118,9 +157,6 @@ const StaffDetail: React.FC = () => {
                   ? staff.role.charAt(0).toUpperCase() + staff.role.slice(1)
                   : ""}
               </Badge>
-              {staff?.specialization && (
-                <p className="text-slate-500 mt-1">{staff.specialization}</p>
-              )}
             </div>
 
             <Separator className="my-4" />
