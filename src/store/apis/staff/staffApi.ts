@@ -90,8 +90,22 @@ export const staffApi = createApi({
     }),
     resendPassword: builder.mutation<void , string>({
       query: (id) => (`/staff/${id}/resendPassword`)
+    }),
+    activateAccount: builder.mutation<void, string>({
+      query: (id) => `/staff/${id}/activate`,
+      invalidatesTags: (result, error, id) => [
+        { type: 'Staff', id },
+        { type: 'Staff' } // Also invalidate the list
+      ]
+    }),
+    deactivateAccount: builder.mutation<void, string>({
+      query: (id) => `/staff/${id}/deactivate`,
+      invalidatesTags: (result, error, id) => [
+        { type: 'Staff', id },
+        { type: 'Staff' } // Also invalidate the list
+      ]
     })
   }),
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation } = staffApi;

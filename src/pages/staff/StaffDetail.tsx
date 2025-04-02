@@ -22,6 +22,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import {
+  useActivateAccountMutation,
+  useDeactivateAccountMutation,
   useGetStaffByIdQuery,
   useResendPasswordMutation,
 } from "@/store/apis/staff/staffApi";
@@ -33,6 +35,10 @@ const StaffDetail: React.FC = () => {
   const { data: staff, error, isLoading } = useGetStaffByIdQuery(id || "");
   const [resendPassword, { isLoading: isSending }] =
     useResendPasswordMutation();
+  const [activateAccount, { isLoading: activatingAccount }] =
+    useActivateAccountMutation();
+  const [deactivateAccount, { isLoading: deactivatingAccount }] =
+    useDeactivateAccountMutation();
 
   const handleResendPassword = async () => {
     try {
@@ -44,7 +50,41 @@ const StaffDetail: React.FC = () => {
       } else if (err?.error) {
         toast.error(err.error);
       } else {
-        toast.error("An unexpected error occurred during staff creation");
+        toast.error("An unexpected error occurred during sending email");
+      }
+    }
+  };
+
+  const handleActivateAccoount = async () => {
+    try {
+      await activateAccount(id!).unwrap();
+      toast.success("Account Activated");
+    } catch (err: any) {
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else if (err?.error) {
+        toast.error(err.error);
+      } else {
+        toast.error(
+          "An unexpected error occurred during activationg the account"
+        );
+      }
+    }
+  };
+
+  const handleDeactivateAccoount = async () => {
+    try {
+      await deactivateAccount(id!);
+      toast.success("Account deactivated");
+    } catch (err: any) {
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else if (err?.error) {
+        toast.error(err.error);
+      } else {
+        toast.error(
+          "An unexpected error occurred during deactivationg the account"
+        );
       }
     }
   };
@@ -93,7 +133,7 @@ const StaffDetail: React.FC = () => {
             </p>
             <Button
               onClick={handleBack}
-              className="mt-4 bg-teal-600 hover:bg-teal-700"
+              className="mt-4 bg-teal-600 hover:bg-teal-700 text-white/90 cursor-pointer"
             >
               Return to Staff List
             </Button>
@@ -125,6 +165,42 @@ const StaffDetail: React.FC = () => {
               )}
             </span>
           </Button>
+
+          {staff.isActive ? (
+            <Button
+              className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
+              onClick={handleDeactivateAccoount}
+            >
+              <span className="text-white/90">
+                {" "}
+                {deactivatingAccount ? (
+                  <div className="flex items-center hover gap-2">
+                    <Loader className="h-4 w-4 animate-spin" />{" "}
+                    <span className="text-white">deactivating Account..</span>
+                  </div>
+                ) : (
+                  <span className="text-white/90">Deactivate account</span>
+                )}
+              </span>
+            </Button>
+          ) : (
+            <Button
+              className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
+              onClick={handleActivateAccoount}
+            >
+              <span className="text-white/90">
+                {" "}
+                {activatingAccount ? (
+                  <div className="flex items-center hover gap-2">
+                    <Loader className="h-4 w-4 animate-spin" />{" "}
+                    <span className="text-white">activating Account..</span>
+                  </div>
+                ) : (
+                  <span className="text-white/90">Activate account</span>
+                )}
+              </span>
+            </Button>
+          )}
 
           <Button
             onClick={handleEdit}
