@@ -24,7 +24,9 @@ export interface LoginResponse {
     isActive: boolean;
     qualifications: string;
     previousExperience: string;
-    profilePicture: string
+    profilePicture: string;
+    workSchedule: string;
+    isFirstLogin:boolean;
   }
 }
 

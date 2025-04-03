@@ -33,8 +33,12 @@ export default function LoginPage() {
     try {
       const response = await login({ email, password }).unwrap();
       dispatch(setUser(response));
-      toast.success("Login successful");
+      if (response.staff.isFirstLogin == true) {
+        navigate("/change-first-password");
+        return;
+      }
       navigate("/dashboard");
+      toast.success("Login successful");
     } catch (err: any) {
       console.error("Login failed", err);
       if (err?.data?.message) {

@@ -8,6 +8,7 @@ import CreateStaff from "./pages/staff/CreateStaff";
 import GetStaffs from "./pages/staff/GetStaffs";
 import StaffDetail from "./pages/staff/StaffDetail";
 import UpdateStaff from "./pages/staff/UpdateStaff";
+import ChangeFirstPassword from "./pages/staff/ChangeFirstPassword";
 
 export default function App() {
   return (
@@ -25,6 +26,10 @@ export default function App() {
             </Route>
           </Route>
           <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/change-first-password"
+            element={<ChangeFirstPassword />}
+          />
         </Routes>
       </div>
     </Router>
