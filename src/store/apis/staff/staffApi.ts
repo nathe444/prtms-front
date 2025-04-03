@@ -77,6 +77,11 @@ interface ChangeFirstPassword {
   password: string;
 }
 
+interface ChangePassword {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export const staffApi = createApi({
   reducerPath: "staffApi",
   baseQuery: baseQueryWithReauth, // Use the reauth base query here
@@ -148,8 +153,16 @@ export const staffApi = createApi({
         body:passwordData,
         responseHandler: (response:any) => response.text(),
       }),
+    }),
+    ChangePassword : builder.mutation<void , ChangePassword>({
+      query: (passwordData) => ({
+        url: `/staff/change-Password`,
+        method: "POST",
+        body:passwordData,
+        responseHandler: (response:any) => response.text(),
+      }),
     })
   }),
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation , useChangePasswordMutation } = staffApi;
