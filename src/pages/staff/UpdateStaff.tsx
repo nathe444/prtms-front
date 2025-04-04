@@ -186,11 +186,14 @@ const UpdateStaff: React.FC = () => {
       );
 
       const parsedData = staffSchema.parse(cleanedData);
-      console.log(parsedData);
-
-      await updateStaff({ ...parsedData, id }).unwrap();
+      if (id) {
+        await updateStaff({
+          id,
+          staffData: parsedData,
+        }).unwrap();
+      }
       toast.success("Staff updated successfully");
-      // navigate("/staffs");
+      navigate("/staffs");
     } catch (err: any) {
       console.error("staff update failed", err);
 

@@ -1,7 +1,6 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
   Mail,
   Phone,
   MapPin,
@@ -35,7 +34,7 @@ const GetPersonalDetails: React.FC = () => {
       <div className="flex justify-center items-center h-screen">
         <Loader2 className="mr-2 h-8 w-8 animate-spin text-teal-600" />{" "}
         <span className="font-bold text-teal-600">
-          Loading staff Details...
+          Loading Personal Details...
         </span>
       </div>
     );
