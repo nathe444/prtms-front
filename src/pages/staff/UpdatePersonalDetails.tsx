@@ -11,24 +11,14 @@ import {
   Camera,
   CheckCircle2,
   Loader,
-  Loader2,
 } from "lucide-react";
-import { useUpdateStaffMutation } from "@/store/apis/staff/staffApi";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useUpdatePersonalDetailsMutation } from "@/store/apis/staff/staffApi";
 
 const staffSchema = z.object({
-  role: z.enum([
-    "doctor",
-    "nurse",
-    "pharmacist",
-    "receptionist",
-    "laboratory_technologist",
-    "cashier",
-    "super_admin",
-  ]),
   firstName: z
     .string()
     .min(2, { message: "First name must be at least 2 characters" }),
@@ -74,7 +64,6 @@ const staffSchema = z.object({
 });
 
 interface StaffFormData {
-  role: string;
   firstName: string;
   fatherName: string;
   grandFatherName: string;
@@ -100,7 +89,6 @@ const UpdatePersonalDetails: React.FC = () => {
     "required"
   );
   const [formData, setFormData] = useState<StaffFormData>({
-    role: "Doctor",
     firstName: "",
     fatherName: "",
     grandFatherName: "",
@@ -125,7 +113,7 @@ const UpdatePersonalDetails: React.FC = () => {
     [key: string]: string;
   }>({});
 
-  const [updateStaff, { isLoading }] = useUpdateStaffMutation();
+  const [updateStaff, { isLoading }] = useUpdatePersonalDetailsMutation();
   const navigate = useNavigate();
 
   const handleInputChange = (
@@ -179,10 +167,8 @@ const UpdatePersonalDetails: React.FC = () => {
         })
       );
 
-      // const parsedData = staffSchema.parse(cleanedData);
-      // await updateStaff({
-      //   staffData: parsedData,
-      // }).unwrap();
+      const parsedData = staffSchema.parse(cleanedData);
+      await updateStaff(parsedData).unwrap();
 
       toast.success("Personal Details updated successfully");
       navigate("/staffs");
@@ -320,21 +306,6 @@ const UpdatePersonalDetails: React.FC = () => {
   };
 
   const requiredFields = [
-    {
-      name: "role",
-      label: "Role",
-      type: "select",
-      icon: User,
-      options: [
-        "doctor",
-        "nurse",
-        "pharmacist",
-        "receptionist",
-        "laboratory_technologist",
-        "cashier",
-        // "super_admin",
-      ],
-    },
     { name: "firstName", label: "First Name", type: "text", icon: User },
     { name: "fatherName", label: "Father Name", type: "text", icon: User },
     {
@@ -426,11 +397,16 @@ const UpdatePersonalDetails: React.FC = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   if (staffDetail) {
-  //     setFormData(staffDetail);
-  //   }
-  // }, [staffDetail]);
+  const location = useLocation();
+  const staff = location.state;
+
+  useEffect(() => {
+    if (staff) {
+      setFormData(staff);
+    }
+  }, [staff]);
+
+  console.log(staff);
 
   // if (fetchingDetails) {
   //   return (
@@ -561,7 +537,7 @@ const UpdatePersonalDetails: React.FC = () => {
           >
             {isLoading ? (
               <div className="flex items-center hover gap-2">
-                <Loader className="h-4 w-4 animate-spin" />{" "}
+                <Loader className="h-4 w-4 animate-spin text-white" />{" "}
                 <span className="text-white">Updating Personal Details..</span>
               </div>
             ) : (

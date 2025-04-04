@@ -11,6 +11,7 @@ import UpdateStaff from "./pages/staff/UpdateStaff";
 import ChangeFirstPassword from "./pages/auth/ChangeFirstPassword";
 import ChangePassword from "./pages/auth/ChangePassword";
 import GetPersonalDetails from "./pages/staff/GetPersonalDetails";
+import UpdatePersonalDetails from "./pages/staff/UpdatePersonalDetails";
 
 export default function App() {
   return (
@@ -28,6 +29,10 @@ export default function App() {
               <Route
                 path="/staff/get-personal-details"
                 element={<GetPersonalDetails />}
+              />
+              <Route
+                path="/staff/update-personal-details"
+                element={<UpdatePersonalDetails />}
               />
             </Route>
             <Route path="/change-password" element={<ChangePassword />} />

@@ -567,7 +567,7 @@ const UpdateStaff: React.FC = () => {
           >
             {isLoading ? (
               <div className="flex items-center hover gap-2">
-                <Loader className="h-4 w-4 animate-spin" />{" "}
+                <Loader className="h-4 w-4 animate-spin text-white/90" />{" "}
                 <span className="text-white">Updating Staff..</span>
               </div>
             ) : (

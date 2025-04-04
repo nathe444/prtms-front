@@ -26,7 +26,7 @@ const GetPersonalDetails: React.FC = () => {
   const { data: staff, error, isLoading } = useGetPersonalDetailsQuery();
 
   const handleUpdate = () => {
-    navigate(`/staff/update-personal-details`);
+    navigate(`/staff/update-personal-details`, { state: staff });
   };
 
   if (isLoading) {

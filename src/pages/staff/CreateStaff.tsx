@@ -19,10 +19,24 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const staffSchema = z.object({
-  role: z.enum(["doctor", "nurse", "pharmacist", "receptionist", "laboratory_technologist", "cashier", "super_admin"]),
-  firstName: z.string().min(2, { message: "First name must be at least 2 characters" }),
-  fatherName: z.string().min(2, { message: "Father name must be at least 2 characters" }),
-  grandFatherName: z.string().min(2, { message: "Grandfather name must be at least 2 characters" }),
+  role: z.enum([
+    "doctor",
+    "nurse",
+    "pharmacist",
+    "receptionist",
+    "laboratory_technologist",
+    "cashier",
+    "super_admin",
+  ]),
+  firstName: z
+    .string()
+    .min(2, { message: "First name must be at least 2 characters" }),
+  fatherName: z
+    .string()
+    .min(2, { message: "Father name must be at least 2 characters" }),
+  grandFatherName: z
+    .string()
+    .min(2, { message: "Grandfather name must be at least 2 characters" }),
   sex: z.enum(["male", "female"]),
   email: z.string().email({ message: "Invalid email address" }),
   dateOfBirth: z.string().refine(
@@ -34,15 +48,29 @@ const staffSchema = z.object({
     },
     { message: "You must be at least 18 years old" }
   ),
-  phoneNumber: z.string().regex(/^\+?[0-9]{10,14}$/, { message: "Invalid phone number" }),
-  address: z.string().min(5, { message: "Address must be at least 5 characters" }),
-  emergencyContactName: z.string().min(2, { message: "Emergency contact name must be at least 2 characters" }),
-  emergencyContactPhoneNumber: z.string().regex(/^\+?[0-9]{10,14}$/, { message: "Invalid emergency contact phone number" }),
+  phoneNumber: z
+    .string()
+    .regex(/^\+?[0-9]{10,14}$/, { message: "Invalid phone number" }),
+  address: z
+    .string()
+    .min(5, { message: "Address must be at least 5 characters" }),
+  emergencyContactName: z
+    .string()
+    .min(2, {
+      message: "Emergency contact name must be at least 2 characters",
+    }),
+  emergencyContactPhoneNumber: z
+    .string()
+    .regex(/^\+?[0-9]{10,14}$/, {
+      message: "Invalid emergency contact phone number",
+    }),
 
   houseNumber: z.string().optional(),
   specialization: z.string().optional(),
   isTriage: z.boolean().optional(),
-  bloodGroup: z.enum(["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-", "Rh+", "Rh-"]).optional(),
+  bloodGroup: z
+    .enum(["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-", "Rh+", "Rh-"])
+    .optional(),
   isActive: z.boolean().optional(),
   qualifications: z.string().optional(),
   previousExperience: z.string().optional(),
@@ -73,7 +101,9 @@ interface StaffFormData {
 }
 
 const CreateStaff: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"required" | "optional">("required");
+  const [activeTab, setActiveTab] = useState<"required" | "optional">(
+    "required"
+  );
   const [formData, setFormData] = useState<StaffFormData>({
     role: "Doctor",
     firstName: "",
@@ -97,7 +127,9 @@ const CreateStaff: React.FC = () => {
     profilePicture: "",
   });
 
-  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
+  const [validationErrors, setValidationErrors] = useState<{
+    [key: string]: string;
+  }>({});
 
   const [createStaff, { isLoading }] = useCreateStaffMutation();
   const navigate = useNavigate();
@@ -106,14 +138,14 @@ const CreateStaff: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear validation error for this field when user starts typing
     if (validationErrors[name]) {
-      setValidationErrors(prev => {
-        const newErrors = {...prev};
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
@@ -141,30 +173,30 @@ const CreateStaff: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const cleanedData = Object.fromEntries(
         Object.entries(formData).filter(([_, value]) => {
-          if (typeof value === 'string') {
-            return value.trim() !== '';
+          if (typeof value === "string") {
+            return value.trim() !== "";
           }
           return value !== null && value !== undefined;
         })
       );
 
       const parsedData = staffSchema.parse(cleanedData);
-      
+
       await createStaff(parsedData).unwrap();
       toast.success("Staff created successfully");
       navigate("/staffs");
     } catch (err: any) {
       console.error("staff creation failed", err);
-      
+
       if (err instanceof z.ZodError) {
-        const errorMap: {[key: string]: string} = {};
+        const errorMap: { [key: string]: string } = {};
         err.errors.forEach((issue) => {
-          const path = issue.path.join('.');
+          const path = issue.path.join(".");
           errorMap[path] = issue.message;
         });
         setValidationErrors(errorMap);
@@ -194,7 +226,7 @@ const CreateStaff: React.FC = () => {
             </label>
             <select
               name={name}
-              value={formData[name as keyof StaffFormData] as string || ""}
+              value={(formData[name as keyof StaffFormData] as string) || ""}
               onChange={handleInputChange}
               className={cn(
                 "w-full px-3 py-2 border border-teal-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500",
@@ -274,7 +306,7 @@ const CreateStaff: React.FC = () => {
             <input
               type={type}
               name={name}
-              value={formData[name as keyof StaffFormData] as string || ""}
+              value={(formData[name as keyof StaffFormData] as string) || ""}
               onChange={handleInputChange}
               placeholder={`Enter ${label}`}
               className={cn(
@@ -296,7 +328,15 @@ const CreateStaff: React.FC = () => {
       label: "Role",
       type: "select",
       icon: User,
-      options: ["doctor", "nurse", "pharmacist", "receptionist", "laboratory_technologist", "cashier", "super_admin"],
+      options: [
+        "doctor",
+        "nurse",
+        "pharmacist",
+        "receptionist",
+        "laboratory_technologist",
+        "cashier",
+        "super_admin",
+      ],
     },
     { name: "firstName", label: "First Name", type: "text", icon: User },
     { name: "fatherName", label: "Father Name", type: "text", icon: User },
@@ -406,7 +446,9 @@ const CreateStaff: React.FC = () => {
           `}
           onClick={() => setActiveTab("required")}
         >
-          <span className="relative z-10 text-base md:text-lg">Required Information</span>
+          <span className="relative z-10 text-base md:text-lg">
+            Required Information
+          </span>
           <div
             className={`
               absolute bottom-0 left-0 right-0 h-1 
@@ -443,7 +485,9 @@ const CreateStaff: React.FC = () => {
           `}
           onClick={() => setActiveTab("optional")}
         >
-          <span className="relative z-10 text-base md:text-lg">Optional Details</span>
+          <span className="relative z-10 text-base md:text-lg">
+            Optional Details
+          </span>
           <div
             className={`
               absolute bottom-0 left-0 right-0 h-1 
@@ -484,7 +528,7 @@ const CreateStaff: React.FC = () => {
         )}
 
         <div className="flex justify-end mt-8 space-x-4">
-          <Button 
+          <Button
             onClick={handleSubmit}
             className={cn(
               "w-full bg-teal-600 hover:bg-teal-700",
@@ -495,7 +539,14 @@ const CreateStaff: React.FC = () => {
             )}
             disabled={isLoading}
           >
-            {isLoading ? <div className="flex items-center hover gap-2"><Loader className="h-4 w-4 animate-spin" /> <span className="text-white">Creating Staff..</span></div> : <span className="text-white/90">Create Staff</span>}
+            {isLoading ? (
+              <div className="flex items-center hover gap-2">
+                <Loader className="h-4 w-4 animate-spin text-white" />{" "}
+                <span className="text-white">Creating Staff..</span>
+              </div>
+            ) : (
+              <span className="text-white/90">Create Staff</span>
+            )}
           </Button>
         </div>
       </div>

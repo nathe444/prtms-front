@@ -145,7 +145,9 @@ export default function LoginPage() {
             >
               {isLoading ? (
                 <div className="flex items-center hover gap-2">
-                  <Loader className="h-4 w-4 animate-spin" /> Signing In..
+                  <div className="flex justify-center items-center gap-2 text-white">
+                    <Loader className="h-4 w-4 animate-spin" /> Signing In..
+                  </div>
                 </div>
               ) : (
                 <span className="text-white/90">Sign In</span>
