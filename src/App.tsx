@@ -10,6 +10,7 @@ import StaffDetail from "./pages/staff/StaffDetail";
 import UpdateStaff from "./pages/staff/UpdateStaff";
 import ChangeFirstPassword from "./pages/auth/ChangeFirstPassword";
 import ChangePassword from "./pages/auth/ChangePassword";
+import GetPersonalDetails from "./pages/staff/GetPersonalDetails";
 
 export default function App() {
   return (
@@ -24,6 +25,10 @@ export default function App() {
               <Route path="/staffs" element={<GetStaffs />} />
               <Route path="/staff/:id" element={<StaffDetail />} />
               <Route path="/staff/:id/update" element={<UpdateStaff />} />
+              <Route
+                path="/staff/get-personal-details"
+                element={<GetPersonalDetails />}
+              />
             </Route>
             <Route path="/change-password" element={<ChangePassword />} />
           </Route>

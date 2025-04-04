@@ -154,6 +154,10 @@ export const staffApi = createApi({
         responseHandler: (response:any) => response.text(),
       }),
     }),
+
+    getPersonalDetails : builder.query<Staff , void>({
+      query : ()=> "staff/getPersonalDetails"
+    }),
     ChangePassword : builder.mutation<void , ChangePassword>({
       query: (passwordData) => ({
         url: `/staff/change-Password`,
@@ -165,4 +169,4 @@ export const staffApi = createApi({
   }),
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation , useChangePasswordMutation } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation , useChangePasswordMutation , useGetPersonalDetailsQuery } = staffApi;
