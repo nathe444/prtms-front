@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../../../services/baseQuery";
+import ValidateOtp from "@/pages/auth/ValidateOtp";
 
 interface Staff {
   id: string;
@@ -84,6 +85,22 @@ interface ChangePassword {
 
 interface ForgotPassword {
   email: string;
+}
+
+interface ForgotPasswordResponse {
+  message:string;
+  success:boolean;
+  token:string;
+}
+
+interface ValidateOtp{
+  token:string;
+  otp:string;
+}
+
+interface ResetPassword{
+  token:string;
+  password:string;
 }
 
 export const staffApi = createApi({
@@ -177,15 +194,30 @@ export const staffApi = createApi({
         responseHandler: (response:any) => response.text(),
       }),
     }),
-    forgotPassword : builder.mutation<void , ForgotPassword>({
+    forgotPassword : builder.mutation<ForgotPasswordResponse , ForgotPassword>({
       query: (passwordData)=>({
         url: `/staff/forgot-password`,
         method:"POST",
         body:passwordData,
       })
-    })
+    }),
+    ValidateOtp: builder.mutation<void , ValidateOtp>({
+      query: (otp)=>({
+        url: `/otp/validate-otp`,
+        method:"POST",
+        body:otp,
+      })
+    }),
+    resetPassword : builder.mutation<void, ResetPassword>({
+      query: (passwordData) => ({
+        url: `/staff/reset-password`,
+        method: "POST",
+        body:passwordData,
+        responseHandler: (response:any) => response.text(),
+      }),
+    }),
   })
  
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation , useChangePasswordMutation , useGetPersonalDetailsQuery , useUpdatePersonalDetailsMutation , useForgotPasswordMutation } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation , useChangePasswordMutation , useGetPersonalDetailsQuery , useUpdatePersonalDetailsMutation , useForgotPasswordMutation , useValidateOtpMutation , useResetPasswordMutation } = staffApi;

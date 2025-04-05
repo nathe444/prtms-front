@@ -15,15 +15,17 @@ const ForgotPassword = () => {
   });
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
-  console.log(formData);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await forgotPassword(formData);
-      toast.success("Password reset link sent to your email");
-      navigate("/reset-password");
+      const response = await forgotPassword(formData);
+      if (response.data && response.data.success == true) {
+        toast.success("Password reset link sent to your email");
+        navigate("/validate-otp", { state: response.data });
+        return;
+      }
+      console.log(response);
     } catch (error: any) {
       console.error(error);
       toast.error(error?.message || "Failed to send reset link");

@@ -14,6 +14,7 @@ import GetPersonalDetails from "./pages/staff/GetPersonalDetails";
 import UpdatePersonalDetails from "./pages/staff/UpdatePersonalDetails";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import ValidateOtp from "./pages/auth/ValidateOtp";
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
             element={<ChangeFirstPassword />}
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/validate-otp" element={<ValidateOtp />} />
           <Route path="reset-password" element={<ResetPassword />} />
 
           <Route path="*" element={<NotFound />} />
