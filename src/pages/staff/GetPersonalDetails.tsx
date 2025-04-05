@@ -29,6 +29,10 @@ const GetPersonalDetails: React.FC = () => {
     navigate(`/staff/update-personal-details`, { state: staff });
   };
 
+  const handleChangePassword = () => {
+    navigate(`/staff/change-password`);
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -64,6 +68,14 @@ const GetPersonalDetails: React.FC = () => {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-teal-700">Personal Details</h1>
         <div className="flex gap-2 items-center">
+          <Button
+            onClick={handleChangePassword}
+            className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
+          >
+            <Edit className="mr-2 h-4 w-4 text-white/90" />{" "}
+            <span className="text-white/90">Change Password</span>
+          </Button>
+
           <Button
             onClick={handleUpdate}
             className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"

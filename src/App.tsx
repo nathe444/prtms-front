@@ -13,6 +13,7 @@ import ChangePassword from "./pages/auth/ChangePassword";
 import GetPersonalDetails from "./pages/staff/GetPersonalDetails";
 import UpdatePersonalDetails from "./pages/staff/UpdatePersonalDetails";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 export default function App() {
   return (
@@ -21,7 +22,7 @@ export default function App() {
         <Routes>
           <Route element={<RequireAuth />}>
             <Route element={<Layout />}>
-              <Route path="*" element={<NotFound />} />
+              {/* <Route path="*" element={<NotFound />} /> */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/staff/create" element={<CreateStaff />} />
               <Route path="/staffs" element={<GetStaffs />} />
@@ -36,7 +37,7 @@ export default function App() {
                 element={<UpdatePersonalDetails />}
               />
             </Route>
-            <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/staff/change-password" element={<ChangePassword />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route
@@ -44,6 +45,9 @@ export default function App() {
             element={<ChangeFirstPassword />}
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password" element={<ResetPassword />} />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>
