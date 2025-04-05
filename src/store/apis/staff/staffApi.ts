@@ -82,6 +82,10 @@ interface ChangePassword {
   newPassword: string;
 }
 
+interface ForgotPassword {
+  email: string;
+}
+
 export const staffApi = createApi({
   reducerPath: "staffApi",
   baseQuery: baseQueryWithReauth, // Use the reauth base query here
@@ -172,8 +176,16 @@ export const staffApi = createApi({
         body:passwordData,
         responseHandler: (response:any) => response.text(),
       }),
+    }),
+    forgotPassword : builder.mutation<void , ForgotPassword>({
+      query: (passwordData)=>({
+        url: `/staff/forgot-password`,
+        method:"POST",
+        body:passwordData,
+      })
     })
-  }),
+  })
+ 
 });
 
-export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation , useChangePasswordMutation , useGetPersonalDetailsQuery , useUpdatePersonalDetailsMutation } = staffApi;
+export const { useGetStaffsQuery, useCreateStaffMutation , useGetStaffByIdQuery , useResendPasswordMutation,useActivateAccountMutation , useDeactivateAccountMutation , useUpdateStaffMutation,useChangeFirstPasswordMutation , useChangePasswordMutation , useGetPersonalDetailsQuery , useUpdatePersonalDetailsMutation , useForgotPasswordMutation } = staffApi;

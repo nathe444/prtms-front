@@ -6,25 +6,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useForgotPasswordMutation } from "@/store/apis/staff/staffApi";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+  });
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+
+  console.log(formData);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
-      // TODO: Add forgot password API call here
+      await forgotPassword(formData);
       toast.success("Password reset link sent to your email");
-      navigate("/login");
+      navigate("/reset-password");
     } catch (error: any) {
       console.error(error);
       toast.error(error?.message || "Failed to send reset link");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -46,8 +48,13 @@ const ForgotPassword = () => {
                 <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
                   className="pl-10 bg-slate-50 border-slate-200 focus-visible:ring-teal-500"
                   required
                 />
@@ -66,7 +73,7 @@ const ForgotPassword = () => {
                   <Loader2 className="animate-spin" /> <span>Sending...</span>
                 </div>
               ) : (
-                "Send Reset Link"
+                "Send Reset Email"
               )}
             </Button>
           </form>
