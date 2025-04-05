@@ -51,6 +51,10 @@ export default function LoginPage() {
     }
   };
 
+  const handleNavigate = () => {
+    navigate("/forgot-password");
+  };
+
   return (
     <div className="flex min-h-screen w-full bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Left side - Form */}
@@ -120,16 +124,19 @@ export default function LoginPage() {
                   </button>
                 </div>
               </div>
-
-              <div className="flex items-center justify-between">
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="px-0 text-sm text-teal-600 hover:text-teal-700"
-                >
-                  Forgot password?
-                </Button>
-              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <Button
+                type="button"
+                onClick={() => {
+                  handleNavigate();
+                }}
+                variant="link"
+                size="sm"
+                className="cursor-pointer px-0 text-sm text-teal-600 hover:text-teal-700"
+              >
+                Forgot password?
+              </Button>
             </div>
 
             <Button

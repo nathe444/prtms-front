@@ -12,6 +12,7 @@ import ChangeFirstPassword from "./pages/auth/ChangeFirstPassword";
 import ChangePassword from "./pages/auth/ChangePassword";
 import GetPersonalDetails from "./pages/staff/GetPersonalDetails";
 import UpdatePersonalDetails from "./pages/staff/UpdatePersonalDetails";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 export default function App() {
   return (
@@ -42,6 +43,7 @@ export default function App() {
             path="/change-first-password"
             element={<ChangeFirstPassword />}
           />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </div>
     </Router>
