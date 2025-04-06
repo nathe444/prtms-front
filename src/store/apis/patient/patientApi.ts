@@ -56,6 +56,10 @@ export const patientApi = createApi({
     getPatients : builder.query<CreatePaitentResponse[], void>({
       query : ()=> "/patient/all",
       providesTags: ["Patient"], 
-    })
+    }),
+    getPatientById : builder.query<CreatePaitentResponse, string>({
+      query : (id)=> `/patient/${id}/single`,
+      providesTags: (_, __, id) => [{ type: "Patient", id }],
+    }),
   })
 })
