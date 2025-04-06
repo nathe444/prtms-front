@@ -1,5 +1,6 @@
 import { baseQueryWithReauth } from "@/services/baseQuery";
 import { createApi } from "@reduxjs/toolkit/query";
+import { get } from "http";
 
 
 interface CreatePaitent { 
@@ -51,6 +52,10 @@ export const patientApi = createApi({
           console.error(error);
         }
       },
+    }),
+    getPatients : builder.query<CreatePaitentResponse[], void>({
+      query : ()=> "/patient/all",
+      providesTags: ["Patient"], 
     })
   })
 })
