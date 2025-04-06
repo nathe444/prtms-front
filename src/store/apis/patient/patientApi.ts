@@ -1,6 +1,5 @@
 import { baseQueryWithReauth } from "@/services/baseQuery";
-import { createApi } from "@reduxjs/toolkit/query";
-import { get } from "http";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 
 interface CreatePaitent { 
@@ -63,3 +62,5 @@ export const patientApi = createApi({
     }),
   })
 })
+
+export const { useCreatePatientMutation, useGetPatientsQuery, useGetPatientByIdQuery } = patientApi;
