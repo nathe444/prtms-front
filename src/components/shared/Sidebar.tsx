@@ -3,10 +3,10 @@ import {
   Home,
   User,
   FileText,
-  BarChart2,
   Shield,
   HelpCircle,
   X,
+  Users2,
 } from "lucide-react";
 
 import {
@@ -25,7 +25,7 @@ const items = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Staffs", url: "/staff/all", icon: User },
   { title: "Details", url: "/staff/get-personal-details", icon: FileText },
-  { title: "Patients", url: "/patient/all", icon: BarChart2 },
+  { title: "Patients", url: "/patient/all", icon: Users2 },
   { title: "Security", url: "/security", icon: Shield },
   { title: "Support", url: "/support", icon: HelpCircle },
 ];
