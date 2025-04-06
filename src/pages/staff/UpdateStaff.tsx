@@ -193,7 +193,7 @@ const UpdateStaff: React.FC = () => {
         }).unwrap();
       }
       toast.success("Staff updated successfully");
-      navigate("/staffs");
+      navigate("/staff/all");
     } catch (err: any) {
       console.error("staff update failed", err);
 

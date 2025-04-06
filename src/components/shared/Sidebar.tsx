@@ -23,9 +23,9 @@ import { useSidebar } from "@/components/ui/sidebar";
 // Menu items with Ethiopian context
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Staffs", url: "/staffs", icon: User },
-  { title: "Medical Records", url: "/records", icon: FileText },
-  { title: "Analytics", url: "/analytics", icon: BarChart2 },
+  { title: "Staffs", url: "/staff/all", icon: User },
+  { title: "Details", url: "/staff/get-personal-details", icon: FileText },
+  { title: "Patients", url: "/patient/all", icon: BarChart2 },
   { title: "Security", url: "/security", icon: Shield },
   { title: "Support", url: "/support", icon: HelpCircle },
 ];

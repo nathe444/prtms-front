@@ -273,7 +273,7 @@ const CreatePatient: React.FC = () => {
       const parsedData = patientSchema.parse(cleanedData);
       await createPatient(parsedData).unwrap();
       toast.success("Patient created successfully");
-      navigate("/patients");
+      navigate("/patient/all");
     } catch (err: any) {
       console.error("Patient creation failed", err);
       if (err instanceof z.ZodError) {

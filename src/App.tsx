@@ -15,6 +15,8 @@ import UpdatePersonalDetails from "./pages/staff/UpdatePersonalDetails";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import ValidateOtp from "./pages/auth/ValidateOtp";
+import CreatePatient from "./pages/paitent/CreatePatient";
+import GetPatients from "./pages/paitent/GetPatients";
 
 export default function App() {
   return (
@@ -26,7 +28,7 @@ export default function App() {
               {/* <Route path="*" element={<NotFound />} /> */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/staff/create" element={<CreateStaff />} />
-              <Route path="/staffs" element={<GetStaffs />} />
+              <Route path="/staff/all" element={<GetStaffs />} />
               <Route path="/staff/:id" element={<StaffDetail />} />
               <Route path="/staff/:id/update" element={<UpdateStaff />} />
               <Route
@@ -37,6 +39,8 @@ export default function App() {
                 path="/staff/update-personal-details"
                 element={<UpdatePersonalDetails />}
               />
+              <Route path="/patient/create" element={<CreatePatient />} />
+              <Route path="/patient/all" element={<GetPatients />} />
             </Route>
             <Route path="/staff/change-password" element={<ChangePassword />} />
           </Route>
