@@ -194,10 +194,10 @@ const GetStaffs: React.FC = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                            className="cursor-pointer h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate(`/staff/edit/${staff.id}`);
+                              navigate(`/staff/${staff.id}/update`);
                             }}
                           >
                             <Edit className="h-4 w-4" />

@@ -15,8 +15,9 @@ import UpdatePersonalDetails from "./pages/staff/UpdatePersonalDetails";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import ValidateOtp from "./pages/auth/ValidateOtp";
-import CreatePatient from "./pages/paitent/CreatePatient";
-import GetPatients from "./pages/paitent/GetPatients";
+import CreatePatient from "./pages/patient/CreatePatient";
+import GetPatients from "./pages/patient/GetPatients";
+import PatientDetail from "./pages/patient/PatientDetail";
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
               />
               <Route path="/patient/create" element={<CreatePatient />} />
               <Route path="/patient/all" element={<GetPatients />} />
+              <Route path="/patient/:id" element={<PatientDetail />} />
             </Route>
             <Route path="/staff/change-password" element={<ChangePassword />} />
           </Route>

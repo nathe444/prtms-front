@@ -140,8 +140,8 @@ const GetPatients: React.FC = () => {
                   {filteredPatients.map((patient) => (
                     <TableRow
                       key={patient.id}
-                      className="hover:bg-teal-100 border-b border-teal-200 last:border-0 transition-colors duration-150 cursor-pointer"
-                      onClick={() => navigate(`/patients/${patient.id}`)}
+                      className="hover:bg-teal-100 border-b  border-teal-200 last:border-0 transition-colors duration-150 cursor-pointer"
+                      onClick={() => navigate(`/patient/${patient.id}`)}
                     >
                       <TableCell>
                         <div className="flex items-center space-x-3">
@@ -167,7 +167,7 @@ const GetPatients: React.FC = () => {
                       <TableCell>
                         <Badge
                           variant="outline"
-                          className="bg-slate-50 text-slate-700"
+                          className="bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-100"
                         >
                           {patient.cardNumber}
                         </Badge>
@@ -195,10 +195,10 @@ const GetPatients: React.FC = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                            className="cursor-pointer h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate(`/patients/edit/${patient.id}`);
+                              navigate(`/patient/edit/${patient.id}`);
                             }}
                           >
                             <Edit className="h-4 w-4" />

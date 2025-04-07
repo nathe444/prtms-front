@@ -171,7 +171,7 @@ const UpdatePersonalDetails: React.FC = () => {
       await updateStaff(parsedData).unwrap();
 
       toast.success("Personal Details updated successfully");
-      navigate("/staffs");
+      navigate("/staff/all");
     } catch (err: any) {
       console.error("Personal Details update failed", err);
 
