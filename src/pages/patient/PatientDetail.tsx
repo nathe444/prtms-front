@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -16,15 +16,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-
+import { PatientActionDialogs } from "@/components/patientActionDialogs";
 import { useActivatePatientMutation, useDeactivatePatientMutation, useGetPatientByIdQuery } from "@/store/apis/patient/patientApi";
+import { toast } from "sonner";
 
 const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { data: patient, error, isLoading } = useGetPatientByIdQuery(id || "");
   const [activatePatient , {isLoading:activatingPatient}] = useActivatePatientMutation();
-  const [deactivateAccount , {isLoading:deactivatingPatient}] = useDeactivatePatientMutation();
+  const [deactivatePatient , {isLoading:deactivatingPatient}] = useDeactivatePatientMutation();
+
+  const [openActivateDialog, setOpenActivateDialog] = useState(false);
+  const [openDeactivateDialog, setOpenDeactivateDialog] = useState(false);
 
   const handleBack = () => {
     navigate("/patient/all");
@@ -33,6 +37,42 @@ const PatientDetail: React.FC = () => {
   const handleUpdate = () => {
     navigate(`/patient/${id}/update`);
   };
+
+  const handleActivateAccount = async ()=>{
+    try {
+      await activatePatient(id!).unwrap();
+      toast.success("Patient Account Activated");
+      setOpenActivateDialog(false);
+    } catch (err: any) {
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else if (err?.error) {
+        toast.error(err.error);
+      } else {
+        toast.error(
+          "An unexpected error occurred during activating the account"
+        );
+      }
+  }
+};
+
+  const handleDeactivateAccount = async ()=>{
+    try {
+      await deactivatePatient(id!).unwrap();
+      toast.success("Patient Account Deactivated");
+      setOpenActivateDialog(false);
+    } catch (err: any) {
+      if (err?.data?.message) {
+        toast.error(err.data.message);
+      } else if (err?.error) {
+            toast.error(err.error);
+          } else {
+            toast.error(
+              "An unexpected error occurred during deactivating the account"
+            );
+          }
+  }
+}
 
   if (isLoading) {
     return (
@@ -96,7 +136,7 @@ const PatientDetail: React.FC = () => {
                 {deactivatingPatient ? (
                   <div className="flex items-center hover gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />{" "}
-                    <span className="text-white">deactivating Account..</span>
+                    <span className="text-white">Deactivating Account..</span>
                   </div>
                 ) : (
                   <span className="text-white/90">Deactivate account</span>
@@ -113,7 +153,7 @@ const PatientDetail: React.FC = () => {
                 {activatingPatient ? (
                   <div className="flex items-center hover gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />{" "}
-                    <span className="text-white">activating Account..</span>
+                    <span className="text-white">Activating Account..</span>
                   </div>
                 ) : (
                   <span className="text-white/90">Activate account</span>
@@ -340,20 +380,18 @@ const PatientDetail: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-      {/* <StaffActionDialogs
-        staffId={id!}
-        openResend={openResendDialog}
+      <PatientActionDialogs
+        patientId={id!}
         openActivate={openActivateDialog}
         openDeactivate={openDeactivateDialog}
-        onResendClose={() => setOpenResendDialog(false)}
         onActivateClose={() => setOpenActivateDialog(false)}
         onDeactivateClose={() => setOpenDeactivateDialog(false)}
-        onResendPassword={handleResendPassword}
-        onActivateAccount={handleActivateAccoount}
-        onDeactivateAccount={handleDeactivateAccoount}
-      /> */}
+        onActivateAccount={handleActivateAccount}
+        onDeactivateAccount={handleDeactivateAccount}
+      />
     </div>
   );
 };
+
 
 export default PatientDetail;
