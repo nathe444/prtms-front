@@ -61,7 +61,7 @@ const StaffDetail: React.FC = () => {
     }
   };
 
-  const handleActivateAccoount = async () => {
+  const handleActivateAccount = async () => {
     try {
       await activateAccount(id!).unwrap();
       toast.success("Account Activated");
@@ -73,13 +73,13 @@ const StaffDetail: React.FC = () => {
         toast.error(err.error);
       } else {
         toast.error(
-          "An unexpected error occurred during activationg the account"
+          "An unexpected error occurred during activating the account"
         );
       }
     }
   };
 
-  const handleDeactivateAccoount = async () => {
+  const handleDeactivateAccount = async () => {
     try {
       await deactivateAccount(id!).unwrap();
       toast.success("Account deactivated");
@@ -91,7 +91,7 @@ const StaffDetail: React.FC = () => {
         toast.error(err.error);
       } else {
         toast.error(
-          "An unexpected error occurred during deactivationg the account"
+          "An unexpected error occurred during deactivating the account"
         );
       }
     }
@@ -166,10 +166,10 @@ const StaffDetail: React.FC = () => {
               {isSending ? (
                 <div className="flex items-center hover gap-2">
                   <Loader className="h-4 w-4 animate-spin" />{" "}
-                  <span className="text-white">sending password reset..</span>
+                  <span className="text-white">Sending password reset..</span>
                 </div>
               ) : (
-                <span className="text-white/90">send Password reset</span>
+                <span className="text-white/90">Send Password Reset</span>
               )}
             </span>
           </Button>
@@ -184,7 +184,7 @@ const StaffDetail: React.FC = () => {
                 {deactivatingAccount ? (
                   <div className="flex items-center hover gap-2">
                     <Loader className="h-4 w-4 animate-spin" />{" "}
-                    <span className="text-white">deactivating Account..</span>
+                    <span className="text-white">Deactivating Account..</span>
                   </div>
                 ) : (
                   <span className="text-white/90">Deactivate account</span>
@@ -201,7 +201,7 @@ const StaffDetail: React.FC = () => {
                 {activatingAccount ? (
                   <div className="flex items-center hover gap-2">
                     <Loader className="h-4 w-4 animate-spin" />{" "}
-                    <span className="text-white">activating Account..</span>
+                    <span className="text-white">Activating Account..</span>
                   </div>
                 ) : (
                   <span className="text-white/90">Activate account</span>
@@ -547,8 +547,8 @@ const StaffDetail: React.FC = () => {
         onActivateClose={() => setOpenActivateDialog(false)}
         onDeactivateClose={() => setOpenDeactivateDialog(false)}
         onResendPassword={handleResendPassword}
-        onActivateAccount={handleActivateAccoount}
-        onDeactivateAccount={handleDeactivateAccoount}
+        onActivateAccount={handleActivateAccount}
+        onDeactivateAccount={handleDeactivateAccount}
       />
     </div>
   );
