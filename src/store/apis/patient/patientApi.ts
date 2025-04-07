@@ -60,7 +60,21 @@ export const patientApi = createApi({
       query : (id)=> `/patient/${id}/single`,
       providesTags: (_, __, id) => [{ type: "Patient", id }],
     }),
+    activatePatient : builder.mutation<void , string>({
+      query : (id)=> `/patient/${id}/activate`,
+      invalidatesTags: (_, __, id) => [
+        { type: 'Patient', id },
+        { type: 'Patient' } 
+      ]
+    }),
+    deactivatePatient : builder.mutation<void , string>({
+      query: (id) => `/patient/${id}/deactivate`,
+      invalidatesTags: (_, __, id) => [
+        { type: 'Patient', id },
+        { type: 'Patient' } 
+      ]
+    }),
   })
 })
 
-export const { useCreatePatientMutation, useGetPatientsQuery, useGetPatientByIdQuery } = patientApi;
+export const { useCreatePatientMutation, useGetPatientsQuery, useGetPatientByIdQuery , useActivatePatientMutation , useDeactivatePatientMutation } = patientApi;
