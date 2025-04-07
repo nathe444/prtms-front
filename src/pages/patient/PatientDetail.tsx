@@ -17,12 +17,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
-import { useGetPatientByIdQuery } from "@/store/apis/patient/patientApi";
+import { useActivatePatientMutation, useDeactivatePatientMutation, useGetPatientByIdQuery } from "@/store/apis/patient/patientApi";
 
 const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { data: patient, error, isLoading } = useGetPatientByIdQuery(id || "");
+  const [activatePatient , {isLoading:activatingPatient}] = useActivatePatientMutation();
+  const [deactivateAccount , {isLoading:deactivatingPatient}] = useDeactivatePatientMutation();
 
   const handleBack = () => {
     navigate("/patient/all");
@@ -84,16 +86,16 @@ const PatientDetail: React.FC = () => {
         <h1 className="text-2xl font-bold text-teal-700">Patient Details</h1>
 
         <div className="flex gap-2 items-center">
-          {/* {patient.isActive ? (
+          {patient.isActive ? (
             <Button
               className="w-fit bg-teal-600 hover:bg-teal-700 cursor-pointer flex items-center gap-0"
               onClick={() => setOpenDeactivateDialog(true)}
             >
               <span className="text-white/90">
                 {" "}
-                {deactivatingAccount ? (
+                {deactivatingPatient ? (
                   <div className="flex items-center hover gap-2">
-                    <Loader className="h-4 w-4 animate-spin" />{" "}
+                    <Loader2 className="h-4 w-4 animate-spin" />{" "}
                     <span className="text-white">deactivating Account..</span>
                   </div>
                 ) : (
@@ -108,9 +110,9 @@ const PatientDetail: React.FC = () => {
             >
               <span className="text-white/90">
                 {" "}
-                {activatingAccount ? (
+                {activatingPatient ? (
                   <div className="flex items-center hover gap-2">
-                    <Loader className="h-4 w-4 animate-spin" />{" "}
+                    <Loader2 className="h-4 w-4 animate-spin" />{" "}
                     <span className="text-white">activating Account..</span>
                   </div>
                 ) : (
@@ -118,7 +120,7 @@ const PatientDetail: React.FC = () => {
                 )}
               </span>
             </Button>
-          )} */}
+          )}
 
           <Button
             onClick={handleUpdate}
